@@ -6,7 +6,7 @@ from sklearn.preprocessing import StandardScaler
 
 
 def load_model(modelfile):
-	loaded_model = pickle.load(open('xgb.pkl', 'rb'))
+	loaded_model = pickle.load(open("xgb.pkl", 'rb'))
 	return loaded_model
 
 def std_scale(feature,mean,std):
@@ -23,7 +23,7 @@ data = st.file_uploader("Upload an File", type=["csv", "excel"])
 
 if st.button('Predict'):
     df1 = pd.read_csv(data)
-    loaded_model = load_model('xgb.pkl')
+    loaded_model = load_model("xgb.pkl")
     surge_indicator(df1)
 
     df2=pd.concat([df1,pd.get_dummies(df1['type'], prefix='type_')],axis=1)
