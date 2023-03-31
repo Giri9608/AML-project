@@ -6,7 +6,7 @@ from sklearn.preprocessing import StandardScaler
 
 
 def load_model(modelfile):
-	loaded_model = pickle.load(open("xgb.pkl", 'rb'))
+	loaded_model = pickle.load(open("xgb.pkl", "rb"))
 	return loaded_model
 
 def std_scale(feature,mean,std):
