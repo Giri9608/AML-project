@@ -38,7 +38,7 @@ if st.button('Predict'):
     std_scale('newbalanceDest',1.134943e+06,2.985611e+06)
 
     result = loaded_model.predict(df2)
-    df1['isFlaggedFraud'] = 'df2['isFlaggedFraud']
+    df1['isFlaggedFraud'] = df2['isFlaggedFraud']
     df2['isFraud'] = result
 
     st.dataframe(df1)
