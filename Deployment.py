@@ -4,8 +4,8 @@ import pickle
 import pandas as pd
 from sklearn.preprocessing import StandardScaler
 
-def load_model(modelfile):
-	loaded_model = pickle.load(open(modelfile, 'rb'))
+def load_model(xgb):
+	loaded_model = pickle.load(open(xgb, 'rb'))
 	return loaded_model
 
 def std_scale(feature,mean,std):
