@@ -23,7 +23,7 @@ data = st.file_uploader("Upload an File", type=["csv", "excel"])
 
 if st.button('Predict'):
     df1 = pd.read_csv(data)
-    df.drop(['Unnamed: 0'], axis=1, inplace=True)
+    df1.drop(['Unnamed: 0'], axis=1, inplace=True)
     loaded_model = load_model('project.pkl')
     surge_indicator(df1)
 
