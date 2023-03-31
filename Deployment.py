@@ -3,7 +3,7 @@ import numpy as np
 import pickle
 import pandas as pd
 from sklearn.preprocessing import StandardScaler
-from xgboost import XGBClassifier
+import xgboost as xgb
 
 def load_model(modelfile):
 	loaded_model = pickle.load(open('xgb.pkl', 'rb'))
