@@ -75,7 +75,7 @@ def main():
                 prediction.append(value[0])
             df=pd.DataFrame(prediction,columns=["Status"])
             result = pd.concat([df1, df], axis=1)
-            result.to_csv('output.csv')
+            st.dataframe (result) 
                   
        
     else:
