@@ -22,7 +22,7 @@ data = st.file_uploader("Upload an File", type=["csv", "excel"])
 
 if st.button('Predict'):
     df1 = pd.read_csv(data)
-    loaded_model = load_model('RF.pkl')
+    loaded_model = load_model('xgb.pkl')
     surge_indicator(df1)
 
     df2=pd.concat([df1,pd.get_dummies(df1['type'], prefix='type_')],axis=1)
