@@ -29,6 +29,7 @@ if st.button('Predict'):
 
     df2=pd.concat([df1,pd.get_dummies(df1['type'], prefix='type_')],axis=1)
     df2.drop(['type'],axis=1,inplace = True)
+    df2 = df2.dropna()
     df2 = df2.drop(['nameOrig','nameDest'], axis=1)
     
     std_scale('step',6.009223,3.609673)
