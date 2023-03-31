@@ -6,7 +6,7 @@ from sklearn.model_selection import train_test_split
 
 """# **Importing Dataset**"""
 
-data = pd.read_csv("D:\Project 95\Money_Laundering_Dataset.csv")
+data = pd.read_csv("Money_Laundering_Dataset.csv")
 data.shape
 
 
