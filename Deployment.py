@@ -4,7 +4,7 @@ import pickle
 import pandas as pd
 from sklearn.preprocessing import StandardScaler
 
-def load_model(xgb):
+def load_model(modelfile):
 	loaded_model = pickle.load(open(xgb, 'rb'))
 	return loaded_model
 
