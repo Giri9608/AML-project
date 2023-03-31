@@ -16,7 +16,7 @@ st.set_page_config(page_title="AML",
 
 
 st.title("Anti Money Laundering System")
-loaded_model=pickle.load(open("D://Project 95//project.pkl","rb"))
+loaded_model=pickle.load(open("project.pkl","rb"))
 
 uploaded_file = st.file_uploader("Choose a file")
 def main(): 
