@@ -1,4 +1,3 @@
-
 import streamlit as st
 import numpy as np
 import pickle
@@ -23,13 +22,11 @@ data = st.file_uploader("Upload an File", type=["csv", "excel"])
 
 if st.button('Predict'):
     df1 = pd.read_csv(data)
-    df1.drop(['Unnamed: 0'], axis=1, inplace=True)
     loaded_model = load_model('project.pkl')
     surge_indicator(df1)
 
     df2=pd.concat([df1,pd.get_dummies(df1['type'], prefix='type_')],axis=1)
     df2.drop(['type'],axis=1,inplace = True)
-    df2 = df2.dropna()
     df2 = df2.drop(['nameOrig','nameDest'], axis=1)
     
     std_scale('step',6.009223,3.609673)
@@ -44,12 +41,3 @@ if st.button('Predict'):
     df2['isFraud'] = result
 
     st.dataframe(df1)
-    
-
-    #prediction = loaded_model.predict(single_pred)
-    #col1.write('''
-    ## Results 🔍 
-    #''')
-    #col1.success(f"{prediction.item().title()} are recommended by the A.I for your farm.")
-
-    
