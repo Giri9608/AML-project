@@ -1,92 +1,54 @@
 
-import pandas as pd
-import pickle
 import streamlit as st
+import numpy as np
+import pickle
+import pandas as pd
+from sklearn.preprocessing import StandardScaler
 
+def load_model(modelfile):
+	loaded_model = pickle.load(open(modelfile, 'rb'))
+	return loaded_model
 
+def std_scale(feature,mean,std):
+     df2[feature] = (df2[feature]-mean)/std
 
-# Set page config
-st.set_page_config(page_title="AML",
-                   page_icon= "💵",
-                   layout="centered",
-                   initial_sidebar_state="auto",
-                   menu_items={"Get help":"mailto:giridharan9608@gmail.com",
-                                "Report a Bug":"mailto:giridharan9608@gmail.com",
-                                "About": "The AML project typically involves the collection and analysis of data to identify patterns and suspicious activities that may indicate illegal behavior. The project also includes the implementation of various regulatory compliance measures, such as customer due diligence (CDD), enhanced due diligence (EDD), and transaction monitoring.The AML project uses advanced technology such as machine learning to identify patterns and suspicious activities in large datasets. The project also requires the collaboration of various stakeholders, including financial institutions, law enforcement agencies, regulators, and other organizations."} )
+#Surge indicator
+def surge_indicator(data):
+    '''Creates a new column which has 1 if the transaction amount is greater than the threshold
+    else it will be 0'''
+    data['isFlaggedFraud']=[1 if n>200000 else 0 for n in data['amount']]
 
+st.title("Anti-Money Laundering Using Machine learning")
+data = st.file_uploader("Upload an File", type=["csv", "excel"])
 
-st.title("Anti Money Laundering System")
-loaded_model=pickle.load(open("project.pkl","rb"))
+if st.button('Predict'):
+    df1 = pd.read_csv(data)
+    df.drop(['Unnamed: 0'], axis=1, inplace=True)
+    loaded_model = load_model('project.pkl')
+    surge_indicator(df1)
 
-uploaded_file = st.file_uploader("Choose a file")
-def main(): 
+    df2=pd.concat([df1,pd.get_dummies(df1['type'], prefix='type_')],axis=1)
+    df2.drop(['type'],axis=1,inplace = True)
+    df2 = df2.drop(['nameOrig','nameDest'], axis=1)
     
-    if uploaded_file is not None:
-        #read csv
-        df1=pd.read_csv(uploaded_file,encoding='utf-8',on_bad_lines='skip')
-        data=df1.copy()
-        data=data.dropna()
-        
-        data=data.drop(["Unnamed: 0"],axis=1)
-    
-         # High amount
-         ## Here finding the supspicous Transaction which above thrdhold amount 
-        data['high'] = [1 if n>250000 else 0 for n in data['amount']]
-    
-    
-         # Rapid Movement
-    
-        ## Transaction frequency for benficier account
+    std_scale('step',6.009223,3.609673)
+    std_scale('amount',1.906158e+05,5.112169e+05)
+    std_scale('oldbalanceOrg',5.682215e+05 ,2.049029e+06)
+    std_scale('newbalanceOrig',5.142954e+05,2.035253e+06)
+    std_scale('oldbalanceDest',6.999431e+05,2.050515e+06)
+    std_scale('newbalanceDest',1.134943e+06,2.985611e+06)
 
-        data['rapid']=data['nameDest'].map(data['nameDest'].value_counts())
-        data['Rapid']=[1 if n>30 else 0 for n in data['rapid']]
-        data.drop(['rapid'],axis=1,inplace = True)
-    
-    
-        def label_customer (row):
-            if(row['nameDest'] and isinstance(row['nameDest'], str)):
-                if row['type'] == 'CASH_OUT' and 'C' in row['nameDest']:
-                    return 1
-                return 0
-        
-        data['merchant'] = data.apply (lambda row: label_customer(row), axis=1)
-    
-    
-        # One hot encoding
-        data =pd.concat([data,  pd.get_dummies(data['type'],    prefix='type_'  )],axis=1)
+    result = loaded_model.predict(df2)
+    df1['isFlaggedFraud'] = df2['isFlaggedFraud']
+    df2['isFraud'] = result
+
+    st.dataframe(df1)
     
 
-    
-        data.drop(['nameOrig', 'nameDest','type'], axis = 1, inplace = True)
-    
-        #   Normalization of  the numerical columns
-        col_names = ['amount', 'oldbalanceOrg', 'newbalanceOrig', 'oldbalanceDest','newbalanceDest']
-    
-        def norm(i):
-            x=(i-i.min())/(i.max()-i.min())
-            return x
-    
-        data[col_names]=norm(data[col_names])
-        if st.button("Check"):
-            prediction=[]
-            for i in range(data.shape[0]):  
-                
-                value=loaded_model.predict(data.to_numpy())
-                prediction.append(value[0])
-            df=pd.DataFrame(prediction,columns=["Status"])
-            result = pd.concat([df1, df], axis=1)
-            st.dataframe (result) 
-                  
-       
-    else:
-         st.warning("you need to upload a csv")
-     
+    #prediction = loaded_model.predict(single_pred)
+    #col1.write('''
+    ## Results 🔍 
+    #''')
+    #col1.success(f"{prediction.item().title()} are recommended by the A.I for your farm.")
 
-
-    
-    
-    
-    
-if __name__=="__main__":  
-    main()
     
